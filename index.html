@@ -824,8 +824,20 @@ function assignGimmickDebuffs(wave) {
         activeDebuffs.push({ type: typeStr, actionText: actionTxt, img: isWater ? imgWater : imgThunder, loadKey: isWater ? "water" : "thunder", color: isWater ? '#00b4d8' : '#bf55ec', initialDuration: duration, assignTime: now, timeLeft: duration, rule: truthStatus, row: 1, processed: false });
     } else {
         let isTruthStatus = (truthStatus === "진실");
-        activeDebuffs.push({ type: "BOMB", actionText: isTruthStatus ? "STOP" : "MOVE", img: imgBomb, loadKey: "bomb", color: '#ff9f1c', initialDuration: duration, assignTime: now, timeLeft: duration, rule: truthStatus, row: 1, processed: false });
-        activeDebuffs.push({ type: "EYE", actionText: isTruthStatus ? "HIDE" : "LOOK", img: imgEye, loadKey: "eye", color: '#ff3333', initialDuration: eyeDuration, assignTime: now, timeLeft: eyeDuration, rule: truthStatus, row: 1, processed: false });
+        let hasEye = Math.random() < 0.5;
+
+        let bombAbsoluteTime;
+        if (wave === 1) {
+            bombAbsoluteTime = hasEye ? 51 : 70;
+        } else {
+            bombAbsoluteTime = hasEye ? 70 : 51;
+        }
+        let bombDuration = Math.round((globalStartTime + bombAbsoluteTime * 1000 - now) / 1000);
+
+        activeDebuffs.push({ type: "BOMB", actionText: isTruthStatus ? "STOP" : "MOVE", img: imgBomb, loadKey: "bomb", color: '#ff9f1c', initialDuration: bombDuration, assignTime: now, timeLeft: bombDuration, rule: truthStatus, row: 1, processed: false });
+        if (hasEye) {
+            activeDebuffs.push({ type: "EYE", actionText: isTruthStatus ? "HIDE" : "LOOK", img: imgEye, loadKey: "eye", color: '#ff3333', initialDuration: eyeDuration, assignTime: now, timeLeft: eyeDuration, rule: truthStatus, row: 1, processed: false });
+        }
     }
 }
 
